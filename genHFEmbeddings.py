@@ -1,3 +1,22 @@
+"""
+Message Embedding Pipeline
+
+This script loads multiple related datasets for a phishing email experiment, cleans and parses chat messages, 
+extracts message roles and contents, and computes sentence embeddings for each message using a HuggingFace transformer model. 
+The enriched dataframe (with roles, contents, and embeddings) is saved to disk as both a pickle and CSV file.
+
+Key steps:
+- Loads dataframes (annotations, demographics, emails, existing embeddings, and messages) from pickles.
+- Cleans messages for JSON parsing (removing non-ASCII, fixing quotes, etc.).
+- Extracts message role/content from JSON (or uses fallback).
+- Defines a simple HuggingFace-based embedder using mean pooling.
+- Batches and computes message embeddings.
+- Saves the enriched Messages dataframe with embeddings.
+
+Dependencies:
+- pandas, torch, tqdm, transformers, sentence_transformers, dotenv
+"""
+
 import ast 
 import re 
 import json 
@@ -6,90 +25,56 @@ import pandas as pd
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
+# Load environment variables, if any are needed
 load_dotenv()
 
+# Load all relevant datasets
 Annotations = pd.read_pickle("./Database/Annotations.pkl")
-"""
-Index(['UserId', 'Experiment', 'ExperimentCondition', 'EmailId', 'PhaseTrial',
-       'Decision', 'EmailType', 'PhaseValue', 'Confidence', 'EmailAction',
-       'ReactionTime', 'Correct'],
-      dtype='object')
-"""
 Demographics = pd.read_pickle("./Database/Demographics.pkl")
-"""
-Index(['UserId', 'Age', 'Gender', 'Education', 'Country', 'Victim', 'Chatbot',
-       'Q0', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'PQ1', 'PQ2', 'PQ3', 'PQ4', 'PQ5'],
-      dtype='object')
-"""
-
 Emails = pd.read_pickle("./Database/Emails.pkl")
-"""
-Index(['EmailId', 'BaseEmailID', 'Author', 'Style', 'Type', 'Sender Style',
-       'Sender', 'Subject', 'Sender Mismatch', 'Request Credentials',
-       'Subject Suspicious', 'Urgent', 'Offer', 'Link Mismatch', 'Prompt',
-       'Body'],
-      dtype='object')
-"""
-
 Embeddings = pd.read_pickle("./Database/Embeddings.pkl")
-"""
-Index(['EmailId', 'BaseEmailID', 'Author', 'Style', 'Embedding',
-       'Phishing Similarity', 'Ham Similarity'],
-      dtype='object')
-"""
-
 Messages = pd.read_pickle("./Database/Messages.pkl")
-"""
-Index(['UserId', 'Experiment', 'EmailId', 'PhaseTrial', 'Decision',
-       'MessageNum', 'Message', 'EmailType', 'PhaseValue',
-       'ExperimentCondition', 'Confidence', 'EmailAction', 'ReactionTime',
-       'Correct'],
-      dtype='object')
-"""
 
 def clean_message(text):
+    """
+    Cleans up message text for JSON parsing:
+    - Replaces curly quotes with straight quotes.
+    - Escapes invalid backslashes.
+    - Removes non-ASCII characters.
+    """
     # Replace curly quotes with straight quotes
     text = text.replace("‘", "'").replace("’", "'").replace("“", '"').replace("”", '"')
-    
     # Escape only invalid backslashes
     text = re.sub(r'\\(?![\\\'"abfnrtv0-9xuU])', r'\\\\', text)
-    
     # Remove non-ASCII characters
     text = text.encode('ascii', errors='ignore').decode()
-
     return text
 
+# Parse each message, extracting role/content from JSON if possible, else fallback to raw text
 roles = []
 contents = []
 
 for _, message in Messages.iterrows():
     cleaned = clean_message(message['Message'])
-    
     try:
         parsed = json.loads(cleaned)
     except json.JSONDecodeError:
         parsed = {'role': 'system', 'content': cleaned}
-    
     roles.append(parsed.get('role', None))
     contents.append(parsed.get('content', None))
 
-# Add new columns to Messages
+# Add extracted role/content columns
 Messages['Role'] = roles
 Messages['Content'] = contents
-
-#print(Messages.columns)
-"""
-Index(['UserId', 'Experiment', 'EmailId', 'PhaseTrial', 'Decision',
-       'MessageNum', 'Message', 'EmailType', 'PhaseValue',
-       'ExperimentCondition', 'Confidence', 'EmailAction', 'ReactionTime',
-       'Correct', 'Role', 'Content'],
-      dtype='object')
-"""
 
 import torch
 from transformers import AutoTokenizer, AutoModel
 
 class HFEmbedder:
+    """
+    Simple HuggingFace embedding wrapper for sentence embedding extraction.
+    Uses mean pooling over token embeddings.
+    """
     def __init__(self, model_name="Qwen/Qwen3-0.6B", device=None):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModel.from_pretrained(model_name)
@@ -98,6 +83,9 @@ class HFEmbedder:
         self.model.eval()
 
     def embed(self, texts, batch_size=8):
+        """
+        Batches and embeds a list of texts, returning mean-pooled embeddings.
+        """
         if isinstance(texts, str):
             texts = [texts]
 
@@ -122,21 +110,22 @@ class HFEmbedder:
                 mean_pooled = summed / count
 
                 embeddings.extend(mean_pooled.cpu().tolist())
-
         return embeddings
 
-# pip install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cpu
+# Instantiate embedder (edit model as needed)
 embedder = HFEmbedder()  
 
 texts = Messages['Content'].fillna('').tolist()
 
+# Batch embed all message contents with progress bar
 embeddings = []
 for i in tqdm(range(0, len(texts), 8), desc="Embedding"):
     batch = texts[i:i + 8]
     embeddings.extend(embedder.embed(batch))
 
-# Add to dataframe
+# Add embeddings to the dataframe
 Messages['Embedding'] = embeddings
 
+# Save enriched dataframe to pickle and CSV
 Messages.to_pickle("./Database/MessageEmbeddings.pkl")
 Messages.to_csv("./Database/MessageEmbeddings.csv")
