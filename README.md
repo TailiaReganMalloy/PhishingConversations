@@ -1,3 +1,10 @@
+# ToDo list 
+1. Get embeddings for the conversations, add them to a new pkl file. 
+2. Compare the embeddings for conversations and pariticpant learning outcomes. 
+3. See if the difficulty of emails can be predicted from embeddings. 
+4. How could we improve phishing education? 
+5. What interesting information is there within the embeddings of GPT generated HTML/CSS code? 
+
 # PhishingConversations
 
 The data in the database folder is available in osf: https://osf.io/wbg3r/
@@ -51,16 +58,3 @@ Index(['UserId', 'Experiment', 'EmailId', 'PhaseTrial', 'Decision',
 """
 ```
 
-# Previous Papers Folder 
-
-## CHB2024 Computers in Human Behavior paper code. 
-
-Code for the paper in press for CHB, see the folder for the manuscript. 
-
-## Conference on Natural Language Learning 
-
-Code for the CoNLL paper 
-
-## Frontiers in Psychology
-
-Code for the Frontiers in Psychology paper. 
