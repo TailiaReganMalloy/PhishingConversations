@@ -5,6 +5,10 @@
 4. How could we improve phishing education? 
 5. What interesting information is there within the embeddings of GPT generated HTML/CSS code? 
 
+# Main Analysis To Do 
+
+If you would like to help with this, please take a look at the Database/MessageEmbeddings file, the version uploaded to gitHub is zipped since the whole file is above 100MB. Generally we would like to compare the conversations that people are having with the LLM chatbot and some other information to see if there is a correlation between embeddings and this other information. This other information can include things like participant demographics (age, gender, etc.) or their learning outcomes (training improvement), or the emails that they are looking at. 
+
 # generateEmbeddings.py File 
 
 Azure OpenAI Message Embedding Pipeline
