@@ -1,9 +1,29 @@
 # ToDo list 
-1. Get embeddings for the conversations, add them to a new pkl file. 
+1. (DONE) Get embeddings for the conversations, add them to a new pkl file. 
 2. Compare the embeddings for conversations and pariticpant learning outcomes. 
 3. See if the difficulty of emails can be predicted from embeddings. 
 4. How could we improve phishing education? 
 5. What interesting information is there within the embeddings of GPT generated HTML/CSS code? 
+
+# generateEmbeddings.py File 
+
+Azure OpenAI Message Embedding Pipeline
+
+This script loads phishing experiment dataframes, cleans/parses chat messages, 
+extracts message roles/contents, and computes message embeddings using the Azure OpenAI Embeddings API.  
+The processed dataframe is saved with new 'Role', 'Content', and 'Embedding' columns as both a pickle and CSV file.
+
+Key workflow:
+- Load all relevant pickled dataframes.
+- Clean and parse each message for JSON content; extract roles and messages.
+- Define an OpenAI embedder using Azure API (with retry logic for rate limits).
+- Compute an embedding for each cleaned message (tokenized/truncated as needed).
+- Save the enriched Messages dataframe for downstream use.
+
+Dependencies:
+- pandas, tqdm, tiktoken, numpy, dotenv, openai[azure], azure-identity, python-dotenv
+- Requires Azure OpenAI environment variables in .env (endpoint, key, deployment, etc.)
+
 
 # PhishingConversations
 
