@@ -1,6 +1,10 @@
 # Too large files 
 
 Database/Embeddings.csv 
+Database/Embeddings.pkl 
+
+Database/MessageEmbeddings.csv
+Database/MessageEmbeddings.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
