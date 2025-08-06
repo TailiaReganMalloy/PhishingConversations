@@ -1,7 +1,8 @@
 # ToDo list 
 1. (DONE) Get embeddings for the conversations, add them to a new pkl file. 
-2. Compare the embeddings for conversations and pariticpant learning outcomes. 
-3. See if the difficulty of emails can be predicted from embeddings. 
+2. (DONE) Compare the embeddings for conversations and pariticpant learning outcomes. 
+3. (DONE) See if the difficulty of emails can be predicted from embeddings. 
+3.1: Improve the prediction of improvement and performance based on feedback embeddings. 
 4. How could we improve phishing education? 
 5. What interesting information is there within the embeddings of GPT generated HTML/CSS code? 
 
