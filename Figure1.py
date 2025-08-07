@@ -18,6 +18,7 @@ Index(['UserId', 'Experiment', 'EmailId', 'PhaseTrial', 'Decision',
        'Correct', 'Role', 'Content', 'Embedding'],
       dtype='object')
 """
+MessageEmbeddings = MessageEmbeddings[MessageEmbeddings['Role'] == 'system']
 Annotations = pd.read_pickle("./Database/Annotations.pkl")
 """
 Index(['UserId', 'Experiment', 'ExperimentCondition', 'EmailId', 'PhaseTrial',
@@ -78,50 +79,53 @@ for idx, messageEmbedding in MessageEmbeddings.iterrows():
     User_Performances.append(User_Performance)
     Email_Similarities.append(Email_Similarity)
 
-MessageEmbeddings['Low Improvement'] = Low_Improvements
-MessageEmbeddings["High Improvement"] = High_Improvements
-MessageEmbeddings["User Improvement"] = User_Improvements
+MessageEmbeddings['Low_Improvement'] = Low_Improvements
+MessageEmbeddings["High_Improvement"] = High_Improvements
+MessageEmbeddings["User_Improvement"] = User_Improvements
 
-MessageEmbeddings['Low Performance'] = Low_Performances
-MessageEmbeddings["High Performance"] = High_Performances
-MessageEmbeddings["User Performance"] = User_Performances
-MessageEmbeddings["Email Similarity"] = Email_Similarities
+MessageEmbeddings['Low_Performances'] = Low_Performances
+MessageEmbeddings["High_Performance"] = High_Performances
+MessageEmbeddings["User_Performance"] = User_Performances
+MessageEmbeddings["Email_Similarity"] = Email_Similarities
+
+MessageEmbeddings.to_pickle("./Database/MessageEmbeddings.pkl")
+MessageEmbeddings.to_csv("./Database/MessageEmbeddings.csv")
 
 # Select only the rows where 'High Improvement' is True
-high_embeds = MessageEmbeddings.loc[MessageEmbeddings["High Improvement"] == 1, "Embedding"]
+high_embeds = MessageEmbeddings.loc[MessageEmbeddings["High_Improvement"] == 1, "Embedding"]
 # If embeddings are stored as lists, convert to numpy array
 high_embeds_stack = np.stack(high_embeds.values)
 # Compute the mean embedding
 mean_high_Improvement_embeddings = high_embeds_stack.mean(axis=0).reshape(1, -1)
 
-# Select only the rows where 'Low Improvement' is True
-low_embeds = MessageEmbeddings.loc[MessageEmbeddings["Low Improvement"] == 1, "Embedding"]
+# Select only the rows where 'Low_Improvements' is True
+low_embeds = MessageEmbeddings.loc[MessageEmbeddings["Low_Improvement"] == 1, "Embedding"]
 # If embeddings are stored as lists, convert to numpy array
 low_embeds_stack = np.stack(low_embeds.values)
 # Compute the mean embedding
 mean_low_Improvement_embeddings = low_embeds_stack.mean(axis=0).reshape(1, -1)
 
 # Select only the rows where 'High Performance' is True
-high_embeds = MessageEmbeddings.loc[MessageEmbeddings["High Performance"] == 1, "Embedding"]
+high_embeds = MessageEmbeddings.loc[MessageEmbeddings["High_Performance"] == 1, "Embedding"]
 # If embeddings are stored as lists, convert to numpy array
 high_embeds_stack = np.stack(high_embeds.values)
 # Compute the mean embedding
 mean_high_performance_embeddings = high_embeds_stack.mean(axis=0).reshape(1, -1)
 
-# Select only the rows where 'Low Performance' is True
-low_embeds = MessageEmbeddings.loc[MessageEmbeddings["Low Performance"] == 1, "Embedding"]
+# Select only the rows where 'Low_Performances' is True
+low_embeds = MessageEmbeddings.loc[MessageEmbeddings["Low_Performances"] == 1, "Embedding"]
 # If embeddings are stored as lists, convert to numpy array
 low_embeds_stack = np.stack(low_embeds.values)
 # Compute the mean embedding
 mean_low_performance_embeddings = low_embeds_stack.mean(axis=0).reshape(1, -1)
 
-columns = ["User Improvement",
-            "High Improvement Embedding Similarity",
-            "Low Improvement Embedding Similarity",
-            "User Performance",
-            "High Performance Embedding Similarity",
-            "Low Performance Embedding Similarity",
-            "Email Similarity"]
+columns = ["User_Improvement",
+            "High_Improvement_Embedding_Similarity",
+            "Low_Improvements Embedding Similarity",
+            "User_Performance",
+            "High_Performance_Embedding_Similarity",
+            "Low_Performance_Embedding_Similarity",
+            "Email_Similarity"]
 
 df = pd.DataFrame([], columns=columns)
 
@@ -136,17 +140,17 @@ for UserId in MessageEmbeddings['UserId'].unique():
     Low_Improvement_Embedding_Similarity = cosine_similarity(User_Mean_Embedding, mean_low_Improvement_embeddings)[0][0]
     High_Performance_Embedding_Similarity = cosine_similarity(User_Mean_Embedding, mean_high_performance_embeddings)[0][0]
     Low_Performance_Embedding_Similarity = cosine_similarity(User_Mean_Embedding, mean_low_performance_embeddings)[0][0]
-    User_Improvement = UserMessages['User Improvement'].mean()
-    User_Performance = UserMessages['User Performance'].mean() * 100
-    Email_Similarity = UserMessages['Email Similarity'].mean()
+    User_Improvement = UserMessages['User_Improvement'].mean()
+    User_Performance = UserMessages['User_Performance'].mean() * 100
+    Email_Similarity = UserMessages['Email_Similarity'].mean()
 
-    d = pd.DataFrame([{ "User Improvement":User_Improvement,
-                        "High Improvement Embedding Similarity":High_Improvement_Embedding_Similarity,
-                        "Low Improvement Embedding Similarity":Low_Improvement_Embedding_Similarity,
-                        "User Performance":User_Performance,
-                        "High Performance Embedding Similarity":High_Performance_Embedding_Similarity,
-                        "Low Performance Embedding Similarity":Low_Performance_Embedding_Similarity,
-                        "Email Similarity":Email_Similarity
+    d = pd.DataFrame([{ "User_Improvement":User_Improvement,
+                        "High_Improvement_Embedding_Similarity":High_Improvement_Embedding_Similarity,
+                        "Low_Improvements Embedding Similarity":Low_Improvement_Embedding_Similarity,
+                        "User_Performance":User_Performance,
+                        "High_Performance_Embedding_Similarity":High_Performance_Embedding_Similarity,
+                        "Low_Performance_Embedding_Similarity":Low_Performance_Embedding_Similarity,
+                        "Email_Similarity":Email_Similarity
                     }])
     
     if(len(df) == 0): 
@@ -154,14 +158,14 @@ for UserId in MessageEmbeddings['UserId'].unique():
     else:
         df = pd.concat([df,d])
 
-df = df[df["High Performance Embedding Similarity"] > 0.925] 
+df = df[df["High_Performance_Embedding_Similarity"] > 0.925] 
 # Convert all needed columns to numeric and drop any invalid rows
 cols = [
-    "Email Similarity",
-    "User Performance",
-    "User Improvement",  # aka "User Improvement"
-    "High Improvement Embedding Similarity",
-    "High Performance Embedding Similarity"
+    "Email_Similarity",
+    "User_Performance",
+    "User_Improvement",  # aka "User_Improvement"
+    "High_Improvement_Embedding_Similarity",
+    "High_Performance_Embedding_Similarity"
 ]
 
 df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
@@ -169,19 +173,19 @@ df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
 # Set up a 2x2 subplot grid
 fig, axes = plt.subplots(2, 2, figsize=(16, 10))
 
-# 1. High Improvement Embedding Similarity vs User Improvement
-x1 = df["High Improvement Embedding Similarity"]
-y1 = df["User Improvement"]
+# 1. High_Improvement_Embedding_Similarity vs User_Improvement
+x1 = df["High_Improvement_Embedding_Similarity"]
+y1 = df["User_Improvement"]
 sns.regplot(x=x1, y=y1, ax=axes[0][0])
 slope, intercept, r_val, p_val, _ = linregress(x1, y1)
 axes[0][0].text(0.05, 0.95, f'$R^2$ = {r_val**2:.2f}\np = {p_val:.4f}', transform=axes[0][0].transAxes, fontsize=12, verticalalignment='top')
 axes[0][0].set_title("Feedback Embedding Similarity\nto High Improvement User's Feedback Embeddings \nvs User Pre-Post Training Improvement", fontsize=16)
 axes[0][0].set_xlabel("")
-axes[0][0].set_ylabel("User Improvement (Percentage Points)", fontsize=14)
+axes[0][0].set_ylabel("User_Improvement (Percentage Points)", fontsize=14)
 
-# 2. Email Similarity vs User Improvement
-x2 = df["Email Similarity"]
-y2 = df["User Improvement"]
+# 2. Email_Similarity vs User_Improvement
+x2 = df["Email_Similarity"]
+y2 = df["User_Improvement"]
 sns.regplot(x=x2, y=y2, ax=axes[0][1])
 slope, intercept, r_val, p_val, _ = linregress(x2, y2)
 axes[0][1].text(0.05, 0.95, f'$R^2$ = {r_val**2:.2f}\np = {p_val:.4f}', transform=axes[0][1].transAxes, fontsize=12, verticalalignment='top')
@@ -189,19 +193,19 @@ axes[0][1].set_title("Email and Feedback Embedding Similarity \nvs User Pre-Post
 axes[0][1].set_xlabel("")
 axes[0][1].set_ylabel("")
 
-# 3. High Performance Embedding Similarity vs User Performance
-x3 = df["High Performance Embedding Similarity"]
-y3 = df["User Performance"]
+# 3. High_Performance_Embedding_Similarity vs User_Performance
+x3 = df["High_Performance_Embedding_Similarity"]
+y3 = df["User_Performance"]
 sns.regplot(x=x3, y=y3, ax=axes[1][0])
 slope, intercept, r_val, p_val, _ = linregress(x3, y3)
 axes[1][0].text(0.05, 0.95, f'$R^2$ = {r_val**2:.2f}\np = {p_val:.4f}', transform=axes[1][0].transAxes, fontsize=12, verticalalignment='top')
 axes[1][0].set_title("Feedback Embedding Similarity\nto High Performance User's Feedback Embeddings \nvs User Total Mean Performance", fontsize=16)
 axes[1][0].set_xlabel("Embedding Similarity", fontsize=14)
-axes[1][0].set_ylabel("User Performance (Percentage)", fontsize=14)
+axes[1][0].set_ylabel("User_Performance (Percentage)", fontsize=14)
 
-# 4. Email Similarity vs User Performance
-x4 = df["Email Similarity"]
-y4 = df["User Performance"]
+# 4. Email_Similarity vs User_Performance
+x4 = df["Email_Similarity"]
+y4 = df["User_Performance"]
 sns.regplot(x=x4, y=y4, ax=axes[1][1])
 slope, intercept, r_val, p_val, _ = linregress(x4, y4)
 axes[1][1].text(0.05, 0.95, f'$R^2$ = {r_val**2:.2f}\np = {p_val:.4f}', transform=axes[1][1].transAxes, fontsize=12, verticalalignment='top')
@@ -211,5 +215,3 @@ axes[1][1].set_ylabel("")
 
 plt.tight_layout()
 plt.show()
-
-df.to_pickle("")
