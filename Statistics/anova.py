@@ -4,7 +4,7 @@ import numpy as np
 
 from sklearn.metrics.pairwise import cosine_similarity
 
-MergedEmbeddingDictionary = pd.read_pickle("./Database/MergedEmeddingDictionary.pkl")
+MergedEmbeddingDictionary = pd.read_pickle("../Database/MergedEmeddingDictionary.pkl")
 """
 Index(['UserId', 'Experiment', 'EmailId', 'PhaseTrial', 'Decision',
        'MessageNum', 'Message', 'EmailType', 'PhaseValue',
@@ -17,7 +17,7 @@ Index(['UserId', 'Experiment', 'EmailId', 'PhaseTrial', 'Decision',
       dtype='object'
 """
 
-Annotations =  pd.read_pickle('./Database/Annotations.pkl')
+Annotations =  pd.read_pickle('../Database/Annotations.pkl')
 """
 Index(['UserId', 'Experiment', 'ExperimentCondition', 'EmailId', 'PhaseTrial',
        'Decision', 'EmailType', 'PhaseValue', 'Confidence', 'EmailAction',
@@ -27,7 +27,7 @@ Index(['UserId', 'Experiment', 'ExperimentCondition', 'EmailId', 'PhaseTrial',
 
 # Compute scalar cosine similarity
 MergedEmbeddingDictionary["Message Cosine Similarity to Email"] = [
-    float(round(float(cosine_similarity(m, e)[0, 0]))) for m, e in zip(MergedEmbeddingDictionary["MessageEmbedding"], MergedEmbeddingDictionary["EmailEmbedding"])
+    float(cosine_similarity(m, e)[0, 0]) for m, e in zip(MergedEmbeddingDictionary["MessageEmbedding"], MergedEmbeddingDictionary["EmailEmbedding"])
 ]
 
 MergedEmbeddingDictionary['Message Cosine Similarity to Email'] = MergedEmbeddingDictionary.groupby('Role')['Message Cosine Similarity to Email'].transform(
@@ -58,6 +58,8 @@ MergedEmbeddingDictionary['Chatbot Experience'] = MergedEmbeddingDictionary['Cha
 exp_map = {'IBL Emails Written Feedback':2, 'IBL Emails Points Feedback':1, 'Random Emails Written Feedback':1, 'Ablation Experiment':0}
 MergedEmbeddingDictionary['Cognitive Model Activity'] = MergedEmbeddingDictionary['ExperimentCondition'].map(exp_map).astype('float')
 
+
+assert(False)
 MergedEmbeddingDictionary.to_pickle("Database/MergedEmbeddingDictionary.pkl")
 MergedEmbeddingDictionary.to_csv("Database/MergedEmbeddingDictionary.csv")
 
