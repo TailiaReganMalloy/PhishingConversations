@@ -505,3 +505,164 @@ Indirect & -0.0082869 & 0.0141259 & 0.532 & -0.040039 & 0.0127119 & No \\
 	•	Open Response Cosine Similarity → strong direct positive effect, no mediation.
     
 """
+
+"""
+Teacher mediations 
+\begin{longtable}{lrrrrrc}
+            \caption{Mediation analysis}\label{tab:mediation}\\
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endfirsthead
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endhead
+            \bottomrule
+            \endfoot
+            Age ~ Age & -0.0264997 & 0.0239372 & 0.268 & -0.0734484 & 0.020449 & No \\
+User Improvement ~ Age & -0.0181627 & 0.0239417 & 0.448 & -0.0651202 & 0.0287947 & No \\
+Total & -0.00466275 & 0.0239454 & 0.846 & -0.0516275 & 0.042302 & No \\
+Direct & -0.00514767 & 0.0239567 & 0.83 & -0.0521345 & 0.0418392 & No \\
+Indirect & 0.000484922 & 0.000847043 & 0.576 & -0.000307565 & 0.00325662 & No \\
+\end{longtable}
+
+\begin{longtable}{lrrrrrc}
+            \caption{Mediation analysis}\label{tab:mediation}\\
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endfirsthead
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endhead
+            \bottomrule
+            \endfoot
+            Education Years ~ Education Years & -0.0530213 & 0.023912 & 0.0267 & -0.0999205 & -0.00612216 & Yes \\
+User Improvement ~ Education Years & -0.192927 & 0.0234958 & 4.215\mathrm{e}{-16} & -0.23901 & -0.146844 & Yes \\
+Total & -0.00466275 & 0.0239454 & 0.846 & -0.0516275 & 0.042302 & No \\
+Direct & -0.014934 & 0.0235329 & 0.526 & -0.0610897 & 0.0312217 & No \\
+Indirect & 0.0102712 & 0.0048145 & 0.028 & 0.00142141 & 0.0201355 & Yes \\
+\end{longtable}
+
+\begin{longtable}{lrrrrrc}
+            \caption{Mediation analysis}\label{tab:mediation}\\
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endfirsthead
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endhead
+            \bottomrule
+            \endfoot
+            Phishing Experience ~ Phishing Experience & 0.0116126 & 0.023944 & 0.628 & -0.0353495 & 0.0585746 & No \\
+User Improvement ~ Phishing Experience & 0.185788 & 0.0235288 & 5.043\mathrm{e}{-15} & 0.13964 & 0.231935 & Yes \\
+Total & -0.00466275 & 0.0239454 & 0.846 & -0.0516275 & 0.042302 & No \\
+Direct & -0.00682114 & 0.0235365 & 0.772 & -0.0529839 & 0.0393417 & No \\
+Indirect & 0.00215839 & 0.00458691 & 0.684 & -0.0052136 & 0.0122266 & No \\
+\end{longtable}
+
+\begin{longtable}{lrrrrrc}
+            \caption{Mediation analysis}\label{tab:mediation}\\
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endfirsthead
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endhead
+            \bottomrule
+            \endfoot
+            Chatbot Experience ~ Chatbot Experience & 0.035984 & 0.0239301 & 0.133 & -0.0109508 & 0.0829188 & No \\
+User Improvement ~ Chatbot Experience & -0.0619928 & 0.0238996 & 0.00957 & -0.108868 & -0.0151179 & Yes \\
+Total & -0.00466275 & 0.0239454 & 0.846 & -0.0516275 & 0.042302 & No \\
+Direct & -0.00243516 & 0.0239219 & 0.919 & -0.0493538 & 0.0444834 & No \\
+Indirect & -0.00222759 & 0.00195457 & 0.196 & -0.00688766 & 0.000506962 & No \\
+\end{longtable}
+
+\begin{longtable}{lrrrrrc}
+            \caption{Mediation analysis}\label{tab:mediation}\\
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endfirsthead
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endhead
+            \bottomrule
+            \endfoot
+            Perception of Emails as AI Generated ~ Perception of Emails as AI Generated & 0.0119656 & 0.0239439 & 0.617 & -0.0349963 & 0.0589275 & No \\
+User Improvement ~ Perception of Emails as AI Generated & -0.117816 & 0.0237789 & 7.948\mathrm{e}{-07} & -0.164454 & -0.0711778 & Yes \\
+Total & -0.00466275 & 0.0239454 & 0.846 & -0.0516275 & 0.042302 & No \\
+Direct & -0.00325348 & 0.0237873 & 0.891 & -0.0499081 & 0.0434011 & No \\
+Indirect & -0.00140927 & 0.00297238 & 0.668 & -0.00771321 & 0.00397083 & No \\
+\end{longtable}
+
+\begin{longtable}{lrrrrrc}
+            \caption{Mediation analysis}\label{tab:mediation}\\
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endfirsthead
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endhead
+            \bottomrule
+            \endfoot
+            Pre-Experiment Quiz Score ~ Pre-Experiment Quiz Score & 0.0052073 & 0.0239453 & 0.828 & -0.0417573 & 0.0521719 & No \\
+User Improvement ~ Pre-Experiment Quiz Score & 0.0564874 & 0.0239074 & 0.0182 & 0.00959717 & 0.103378 & Yes \\
+Total & -0.00466275 & 0.0239454 & 0.846 & -0.0516275 & 0.042302 & No \\
+Direct & -0.00495703 & 0.0239143 & 0.836 & -0.0518608 & 0.0419467 & No \\
+Indirect & 0.000294281 & 0.00138704 & 0.868 & -0.00195986 & 0.0039301 & No \\
+\end{longtable}
+
+\begin{longtable}{lrrrrrc}
+            \caption{Mediation analysis}\label{tab:mediation}\\
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endfirsthead
+            \toprule
+            Path & Coef. & SE & $p$ & CI 2.5\% & CI 97.5\% & Sig \\
+            \midrule
+            \endhead
+            \bottomrule
+            \endfoot
+            Open Response Cosine Similarity to Email ~ Open Response Cosine Similarity to Email & 0.254807 & 0.0231553 & 2.811\mathrm{e}{-27} & 0.209392 & 0.300222 & Yes \\
+User Improvement ~ Open Response Cosine Similarity to Email & 0.161652 & 0.0236307 & 1.087\mathrm{e}{-11} & 0.115304 & 0.208 & Yes \\
+Total & -0.00466275 & 0.0239454 & 0.846 & -0.0516275 & 0.042302 & No \\
+Direct & -0.0490365 & 0.0244161 & 0.0448 & -0.0969245 & -0.00114855 & Yes \\
+Indirect & 0.0443738 & 0.00722892 & 0.0\mathrm{e}{+00} & 0.0315184 & 0.0591932 & Yes \\
+\end{longtable}
+
+🔹 Predictors with significant direct effects on User Improvement
+	•	Education Years → strong negative direct effect (coef = -0.193, p < 1e-15).
+	•	Phishing Experience → strong positive direct effect (coef = 0.186, p < 1e-14).
+	•	Chatbot Experience → negative direct effect (coef = -0.062, p = 0.0096).
+	•	Perception of Emails as AI Generated → negative direct effect (coef = -0.118, p < 1e-6).
+	•	Pre-Experiment Quiz Score → positive direct effect (coef = 0.056, p = 0.018).
+	•	Open Response Cosine Similarity to Email → positive direct effect (coef = 0.162, p < 1e-11).
+
+⸻
+
+🔹 Predictors with significant indirect (mediated) effects
+	•	Education Years → positive indirect effect (coef = 0.010, p = 0.028).
+	•	Open Response Cosine Similarity to Email → strong positive indirect effect (coef = 0.044, p < .001).
+
+👉 These predictors influenced User Improvement partly through mediation pathways.
+
+⸻
+
+🔹 Predictors with no significant effects
+	•	Age → no direct, indirect, or total effect.
+	•	Phishing Experience → only direct mattered; no mediation.
+	•	Chatbot Experience → only direct mattered; no mediation.
+	•	Perception of Emails as AI Generated → only direct mattered; no mediation.
+	•	Pre-Experiment Quiz Score → only direct mattered; no mediation.
+"""
