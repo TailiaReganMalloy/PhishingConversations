@@ -18,8 +18,10 @@ Messages['MessageId'] = Messages.index
 # huggingface-cli download google/embeddinggemma-300m --local-dir ./Models/embeddinggemma-300m
 # huggingface-cli download Qwen/Qwen3-Embedding-8B --local-dir ./Models/Qwen3-Embedding-8B
 # huggingface-cli download Qwen/Qwen3-Embedding-4B --local-dir ./Models/Qwen3-Embedding-4B
-# huggingface-cli download sentence-transformers/all-MiniLM-L6-v2 --local-dir ./Models/MiniLM-L6-v2
+# huggingface-cli download sentence-transformers/all-MiniLM-L6-v2 --local-dir ./Models/MiniLM-L6-v2 ssh tailia@trux-hayabusa.uni.lux wsDP0RJPLhd2IwZ
 
+
+# rsync -avP ./Database/ tailia@trux-hayabusa.uni.lux:/home/tailia/PhishingConversations/Database/ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 emailColumns = ["EmailId", "Model", "Embedding"]
 OpenEmailEmbeddings = pd.DataFrame([], columns=emailColumns)
@@ -63,8 +65,23 @@ device = "cuda" if th.cuda.is_available() else "cpu"
 with tqdm(total = total) as pbar:
     for model_path in model_paths:
         tokenizer = AutoTokenizer.from_pretrained(model_path)
-        # load model onto chosen device and set eval mode
-        model = AutoModel.from_pretrained(model_path).to(device)
+        # try memory-friendly load (requires accelerate + bitsandbytes)
+        try:
+            model = AutoModel.from_pretrained(
+                model_path,
+                device_map="auto",        # shard across devices and/or CPU
+                load_in_8bit=True,       # quantize to 8-bit (saves lots of GPU RAM)
+                torch_dtype=th.float16,  # use fp16 where appropriate
+            )
+        except Exception:
+            # fallback: load with low_cpu_mem_usage and move to device if possible
+            model = AutoModel.from_pretrained(model_path, low_cpu_mem_usage=True)
+            if device != "cpu":
+                try:
+                    model.to(device)
+                except RuntimeError:
+                    # if still OOM, keep model on CPU
+                    device = "cpu"
         model.eval()
 
         with th.no_grad():
