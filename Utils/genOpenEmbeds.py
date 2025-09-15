@@ -57,10 +57,15 @@ def extract_embedding(model, outputs, inputs, normalize=True):
             emb = emb / norm
     return emb
 
+# pick device (GPU if available)
+device = "cuda" if th.cuda.is_available() else "cpu"
+
 with tqdm(total = total) as pbar:
     for model_path in model_paths:
         tokenizer = AutoTokenizer.from_pretrained(model_path)
-        model = AutoModel.from_pretrained(model_path)
+        # load model onto chosen device and set eval mode
+        model = AutoModel.from_pretrained(model_path).to(device)
+        model.eval()
 
         with th.no_grad():
             # Do this again for open responses? 
@@ -74,7 +79,6 @@ with tqdm(total = total) as pbar:
                 if max_len is None or max_len <= 0:
                     max_len = getattr(getattr(model, "config", None), "max_position_embeddings", 512)
                 inputs = tokenizer(Text, return_tensors="pt", truncation=True, padding=True, max_length=int(max_len))
-                device = next(model.parameters()).device
                 inputs = {k: v.to(device) for k, v in inputs.items()}
                 outputs = model(**inputs, return_dict=True)
                 embedding = extract_embedding(model, outputs, inputs)
@@ -90,8 +94,13 @@ with tqdm(total = total) as pbar:
                 pbar.update(1)
             for idx, col in Messages.iterrows():
                 Text = col['Message']
-                inputs = tokenizer(Text, return_tensors="pt")
-                outputs = model(**inputs)
+                # truncate to model/tokenizer max length and send tensors to model device
+                max_len = getattr(tokenizer, "model_max_length", None)
+                if max_len is None or max_len <= 0:
+                    max_len = getattr(getattr(model, "config", None), "max_position_embeddings", 512)
+                inputs = tokenizer(Text, return_tensors="pt", truncation=True, padding=True, max_length=int(max_len))
+                inputs = {k: v.to(device) for k, v in inputs.items()}
+                outputs = model(**inputs, return_dict=True)
                 embedding = extract_embedding(model, outputs, inputs)
                 # JSON-serialize embedding for CSV-safe, non-truncated representation
                 embedding_json = json.dumps(embedding.tolist())
