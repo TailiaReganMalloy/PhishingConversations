@@ -59,29 +59,19 @@ def extract_embedding(model, outputs, inputs, normalize=True):
             emb = emb / norm
     return emb
 
-# pick device (GPU if available)
-device = "cuda" if th.cuda.is_available() else "cpu"
+# force CPU-only
+device = "cpu"
 
 with tqdm(total = total) as pbar:
     for model_path in model_paths:
         tokenizer = AutoTokenizer.from_pretrained(model_path)
-        # try memory-friendly load (requires accelerate + bitsandbytes)
-        try:
-            model = AutoModel.from_pretrained(
-                model_path,
-                device_map="auto",        # shard across devices and/or CPU
-                load_in_8bit=True,       # quantize to 8-bit (saves lots of GPU RAM)
-                torch_dtype=th.float16,  # use fp16 where appropriate
-            )
-        except Exception:
-            # fallback: load with low_cpu_mem_usage and move to device if possible
-            model = AutoModel.from_pretrained(model_path, low_cpu_mem_usage=True)
-            if device != "cpu":
-                try:
-                    model.to(device)
-                except RuntimeError:
-                    # if still OOM, keep model on CPU
-                    device = "cpu"
+        # CPU-only safe load
+        model = AutoModel.from_pretrained(
+            model_path,
+            device_map="cpu",
+            low_cpu_mem_usage=True,
+        )
+        model.to("cpu")
         model.eval()
 
         with th.no_grad():
