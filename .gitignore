@@ -2,6 +2,8 @@ old/*
 
 # Too large files 
 
+Utils/Models/*
+
 Database/Embeddings.csv 
 Database/Embeddings.pkl 
 
