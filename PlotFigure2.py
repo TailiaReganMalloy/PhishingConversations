@@ -1,11 +1,12 @@
 import pandas as pd 
-from Utils import plot_helper
+from Utils import plot_regression
+
 
 Merged = pd.read_pickle('./Database/Merged.pkl')
 
-targets = ["User Initial Performance", "User Improvement",  "User Final Performance"]
-(fig, plt) = plot_helper(Merged=Merged, targets=targets)
+Targets = ["Correct Categorization", "Categorization Confidence", "Reaction Time"]
+(fig, plt) = plot_regression(DataFrame=Merged, Targets=Targets)
 
 
 plt.show()
-plt.savefig("Figures/Figure2.png")
+plt.savefig("Figures/Figure1.png")

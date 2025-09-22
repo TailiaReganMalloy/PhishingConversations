@@ -8,4 +8,4 @@ targets = ["User Initial Performance", "User Improvement",  "User Final Performa
 
 
 plt.show()
-plt.savefig("Figures/Figure2.png")
+plt.savefig("Figures/Figure4.png")
