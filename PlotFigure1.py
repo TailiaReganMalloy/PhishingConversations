@@ -1,11 +1,11 @@
 import pandas as pd 
-from Utils import plot_helper
+from Utils import plot_regression
 
 
 Merged = pd.read_pickle('./Database/Merged.pkl')
 
-targets = ["Correct Categorization", "Categorization Confidence", "Reaction Time"]
-(fig, plt) = plot_helper(Merged=Merged, targets=targets)
+Targets = ["Correct Categorization", "Categorization Confidence", "Reaction Time"]
+(fig, plt) = plot_regression(DataFrame=Merged, Targets=Targets)
 
 
 plt.show()

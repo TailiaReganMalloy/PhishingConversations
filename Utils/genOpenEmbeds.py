@@ -6,30 +6,17 @@ import json
 from transformers import AutoTokenizer, AutoModel
 from tqdm import tqdm 
 
-Emails = pd.read_pickle("../Database/OriginalPaper/Emails.pkl")
+Emails = pd.read_pickle("../Database/Emails.pkl")
 Messages = pd.read_pickle("../Database/Messages.pkl")
 Messages['MessageId'] = Messages.index 
 
-# These are the commands to download local versions of these embedding models: 
-# huggingface-cli download Qwen/Qwen3-Embedding-0.6B --local-dir ./Models/qwen3-embedding-0.6B
-# Qwen 
-# huggingface-cli download BAAI/bge-large-en-v1.5 --local-dir ./Models/bge-large-en-v1.5
-# huggingface-cli download ibm-granite/granite-embedding-small-english-r2 --local-dir ./Models/granite-embedding-small-english-r2
-# huggingface-cli download google/embeddinggemma-300m --local-dir ./Models/embeddinggemma-300m
-# huggingface-cli download Qwen/Qwen3-Embedding-8B --local-dir ./Models/Qwen3-Embedding-8B
-# huggingface-cli download Qwen/Qwen3-Embedding-4B --local-dir ./Models/Qwen3-Embedding-4B
-# huggingface-cli download sentence-transformers/all-MiniLM-L6-v2 --local-dir ./Models/MiniLM-L6-v2 ssh tailia@trux-hayabusa.uni.lux wsDP0RJPLhd2IwZ
-
-
-# rsync -avP ./Database/ tailia@trux-hayabusa.uni.lux:/home/tailia/PhishingConversations/Database/ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 emailColumns = ["EmailId", "Model", "Embedding"]
 OpenEmailEmbeddings = pd.DataFrame([], columns=emailColumns)
 messageColumns = ["MessageId", "Model", "Embedding"]
 OpenMessageEmbeddings = pd.DataFrame([], columns=messageColumns)
 
-#model_paths = ["./Models/qwen3-embedding-0.6B", "./Models/Qwen3-Embedding-4B", "./Models/Qwen3-Embedding-8B", "./Models/bge-large-en-v1.5", "./Models/granite-embedding-small-english-r2", "./Models/embeddinggemma-300m" ]
-model_paths = ["./Models/Qwen3-Embedding-4B"]
+model_paths = ["./Models/qwen3-embedding-0.6B", "./Models/Qwen3-Embedding-4B", "./Models/Qwen3-Embedding-8B", "./Models/bge-large-en-v1.5", "./Models/granite-embedding-small-english-r2", "./Models/embeddinggemma-300m", './Models/MiniLM-L6-v2']
 total = (len(Messages) + len(Emails)) * len(model_paths)
 
 def extract_embedding(model, outputs, inputs, normalize=True):
