@@ -672,8 +672,13 @@ def compare_embeddings(emails, orig):
     size_accuracy['composite_metric'] = size_accuracy.apply(composite_row, axis=1)
     # Top panel: per-model r_cat vs Log Embedding Size with composite shown as marker size/color
     comparisons = size_accuracy
+    
+    metric = 'r_mean'
+    pmetric = 'p_correct'
 
-    return (comparisons, msg_features)
+    # overlay composite as sized markers (if available) - mean only (no std)
+    comp_df = comparisons.dropna(subset=['composite_metric', metric, 'Embedding Size']).copy()
+    return (comparisons, msg_features, comp_df)
 
 
 # Helper to plot binned means on bottom panels (as before)
