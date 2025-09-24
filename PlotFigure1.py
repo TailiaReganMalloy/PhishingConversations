@@ -12,8 +12,8 @@ orig = pd.read_pickle("./Database/Messages.pkl")
 
 comparisons, msg_features = compare_embeddings(emails, orig)
 
-comparisons.to_pickle("./Database/Comparisons.pkl")
-msg_features.to_pickle("./Database/Message_Features.pkl")
+#comparisons.to_pickle("./Utils/Datasets/Comparisons.pkl")
+#msg_features.to_pickle("./Database/Message_Features.pkl")
 
 # ------------------------
 # Plot layout: top row full-width (left graph), bottom row with 3 panels
